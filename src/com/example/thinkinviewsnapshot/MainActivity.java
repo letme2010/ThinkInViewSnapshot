@@ -11,13 +11,17 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Menu;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewDebug;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.FrameLayout;
 
 public class MainActivity extends Activity {
 
@@ -36,44 +40,58 @@ public class MainActivity extends Activity {
 			}
 		}
 
+		// ViewGroup view = (ViewGroup) this.findViewById(R.id.f3);
+		//
+		// FrameLayout f5 = new FrameLayout(this){
+		// @Override
+		// public boolean dispatchTouchEvent(MotionEvent ev) {
+		// return super.dispatchTouchEvent(ev);
+		// }
+		// };
+		// FrameLayout.LayoutParams lParams = new
+		// FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, 30);
+		// lParams.topMargin = 50;
+		// view.addView(f5, lParams);
+		// f5.setBackgroundColor(Color.argb(20, 100, 100, 100));
+
 		// get all view png.
-//		new Handler().postDelayed(new Runnable() {
-//
-//			@Override
-//			public void run() {
-//
-//				View decorView = MainActivity.this.getWindow().getDecorView();
-//				saveViewTreeToFile(decorView);
-//
-//			}
-//		}, 1000);
-		
-		// modify view attribute at runtime.
 		new Handler().postDelayed(new Runnable() {
-			
+
 			@Override
 			public void run() {
-				
-				try {
-					View view = MainActivity.this.findViewById(R.id.f1);
-					
-					
-					ViewGroup parentViewGroup = (ViewGroup) view.getParent();
-					LayoutParams lParams = view.getLayoutParams();
-					lParams.width = 77;
-					lParams.height = 88;
-					
-					
-					view.requestLayout();
-					
-					
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				
-				
+
+				View decorView = MainActivity.this.getWindow().getDecorView();
+				saveViewTreeToFile(decorView);
+
 			}
-		}, 3000);
+		}, 1000);
+
+		// modify view attribute at runtime.
+		// new Handler().postDelayed(new Runnable() {
+		//
+		// @Override
+		// public void run() {
+		//
+		// try {
+		// View view = MainActivity.this.findViewById(R.id.f1);
+		//
+		//
+		// ViewGroup parentViewGroup = (ViewGroup) view.getParent();
+		// LayoutParams lParams = view.getLayoutParams();
+		// lParams.width = 77;
+		// lParams.height = 88;
+		//
+		//
+		// view.requestLayout();
+		//
+		//
+		// } catch (Exception e) {
+		// e.printStackTrace();
+		// }
+		//
+		//
+		// }
+		// }, 3000);
 
 	}
 
@@ -98,17 +116,19 @@ public class MainActivity extends Activity {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		saveBitmapToFile(bitmap);
+		saveBitmapToFile(bitmap,
+				aView.getLeft() + "_" + aView.getTop() + "_" + aView.getWidth() + "_" + aView.getHeight() + "_"
+						+ System.currentTimeMillis());
 	}
 
-	public void saveBitmapToFile(Bitmap bitmap) {
+	public void saveBitmapToFile(Bitmap bitmap, String aFileName) {
 
 		if (null == bitmap) {
 			return;
 		}
 
 		try {
-			FileOutputStream out = new FileOutputStream(IMAGE_SAVE_FOLDER + System.currentTimeMillis() + ".png");
+			FileOutputStream out = new FileOutputStream(IMAGE_SAVE_FOLDER + aFileName + ".png");
 			bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
 			out.close();
 		} catch (FileNotFoundException e) {
@@ -116,6 +136,11 @@ public class MainActivity extends Activity {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
+	}
+
+	public void saveBitmapToFile(Bitmap bitmap) {
+		saveBitmapToFile(bitmap, "" + System.currentTimeMillis());
 	}
 
 	public Bitmap shotSnap(View v) {
